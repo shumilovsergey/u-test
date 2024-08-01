@@ -51,15 +51,28 @@
 <body>
     <div class="container">
         <h1>Play YouTube Video</h1>
-        <input type="text" id="youtubeId" placeholder="Enter YouTube video ID">
+        <input type="text" id="youtubeUrl" placeholder="Enter YouTube video URL or ID">
         <button onclick="playVideo()">Play Video</button>
         <iframe id="videoPlayer" src="" allowfullscreen></iframe>
     </div>
 
     <script>
+        function extractVideoId(url) {
+            let videoId = '';
+            const urlPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(urlPattern);
+            if (match && match[1]) {
+                videoId = match[1];
+            } else {
+                videoId = url;
+            }
+            return videoId;
+        }
+
         function playVideo() {
-            let videoId = document.getElementById('youtubeId').value;
-            let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            const url = document.getElementById('youtubeUrl').value;
+            const videoId = extractVideoId(url);
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
             document.getElementById('videoPlayer').src = embedUrl;
         }
     </script>
